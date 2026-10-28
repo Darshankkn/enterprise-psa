@@ -21,7 +21,8 @@
   },
   "dependencies": {
     "@sap/cds": "^9",
-    "@cap-js/hana": "^3.1.2"
+    "@cap-js/hana": "^3.1.2",
+    "@sap/xssec": "^4"
   },
   "devDependencies": {
     "@sap/cds-dk": "^9",
@@ -36,5 +37,12 @@
     "app/invoicemanagement",
     "app/manager",
     "app/employeesmanagement"
-  ]
+  ],
+  "cds": {
+    "requires": {
+      "[production]": {
+        "auth": "xsuaa"
+      }
+    }
+  }
 }

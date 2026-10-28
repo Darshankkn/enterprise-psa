@@ -1,0 +1,53 @@
+{
+  "xsappname": "psa",
+  "tenant-mode": "dedicated",
+  "scopes": [
+    {
+      "name": "$XSAPPNAME.Employee",
+      "description": "Employee role"
+    },
+    {
+      "name": "$XSAPPNAME.Manager",
+      "description": "Manager role"
+    },
+    {
+      "name": "$XSAPPNAME.Finance",
+      "description": "Finance role"
+    },
+    {
+      "name": "$XSAPPNAME.DeptHead",
+      "description": "Department Head role"
+    },
+    {
+      "name": "$XSAPPNAME.Admin",
+      "description": "Administrator role"
+    }
+  ],
+  "role-collections": [
+    {
+      "name": "PSA_Employee",
+      "description": "Employee role collection",
+      "scope-references": ["$XSAPPNAME.Employee"]
+    },
+    {
+      "name": "PSA_Manager",
+      "description": "Manager role collection",
+      "scope-references": ["$XSAPPNAME.Manager"]
+    },
+    {
+      "name": "PSA_Finance",
+      "description": "Finance role collection",
+      "scope-references": ["$XSAPPNAME.Finance"]
+    },
+    {
+      "name": "PSA_DeptHead",
+      "description": "Department Head role collection",
+      "scope-references": ["$XSAPPNAME.DeptHead"]
+    },
+    {
+      "name": "PSA_Admin",
+      "description": "Administrator role collection",
+      "scope-references": ["$XSAPPNAME.Admin"]
+    }
+  ]
+}
