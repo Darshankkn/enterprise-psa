@@ -1,0 +1,881 @@
+<mvc:View
+    controllerName="psa.employee.mytimesheet.controller.View1"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core">
+
+    <Page
+        id="timesheetPage"
+        title="My Timesheet"
+        busy="{timesheet>/busy}">
+
+        <content>
+
+            <VBox
+                id="timesheetMainVBox"
+                class="sapUiMediumMargin">
+
+                <!-- =====================================================
+                     PAGE ACTIONS
+                     ===================================================== -->
+                <OverflowToolbar
+                    id="mainActionToolbar"
+                    class="sapUiSmallMarginBottom">
+
+                    <Title
+                        id="employeeTimesheetTitle"
+                        text="Employee Timesheet"
+                        level="H2" />
+
+                    <ToolbarSpacer
+                        id="mainActionToolbarSpacer" />
+
+                    <Button
+                        id="createTimesheetButton"
+                        text="Create Timesheet"
+                        icon="sap-icon://add"
+                        type="Emphasized"
+                        press=".onCreateTimesheet" />
+
+                    <Button
+                        id="myTimesheetsButton"
+                        text="My Timesheets"
+                        icon="sap-icon://history"
+                        press=".onMyTimesheets" />
+
+                </OverflowToolbar>
+
+
+                <!-- =====================================================
+                     CURRENT TIMESHEET INFORMATION
+                     ===================================================== -->
+                <Panel
+                    id="currentTimesheetPanel"
+                    headerText="Current Timesheet"
+                    width="100%"
+                    class="sapUiSmallMarginBottom">
+
+                    <VBox
+                        id="currentTimesheetContent"
+                        width="100%">
+
+                        <!-- =================================================
+                             WEEK HEADER
+                             ================================================= -->
+                        <HBox
+                            id="weekHeaderHBox"
+                            width="100%"
+                            justifyContent="SpaceBetween"
+                            alignItems="Center"
+                            wrap="Wrap"
+                            class="sapUiSmallMarginBottom">
+
+                            <HBox
+                                id="weekNavigationHBox"
+                                alignItems="Center">
+
+                                <Button
+                                    id="previousWeekButton"
+                                    icon="sap-icon://navigation-left-arrow"
+                                    type="Transparent"
+                                    tooltip="Previous Week"
+                                    press=".onPreviousWeek" />
+
+                                <VBox
+                                    id="weekHeaderVBox"
+                                    alignItems="Center"
+                                    class="sapUiTinyMarginBeginEnd">
+
+                                    <Title
+                                        id="weekTitle"
+                                        text="{timesheet>/weekLabel}"
+                                        level="H3" />
+
+                                    <Text
+                                        id="weeklyTimesheetText"
+                                        text="Weekly Timesheet" />
+
+                                </VBox>
+
+                                <Button
+                                    id="nextWeekButton"
+                                    icon="sap-icon://navigation-right-arrow"
+                                    type="Transparent"
+                                    tooltip="Next Week"
+                                    press=".onNextWeek" />
+
+                            </HBox>
+
+
+                            <!-- STATUS -->
+                            <ObjectStatus
+                                id="timesheetStatus"
+                                title="Status"
+                                text="{timesheet>/status}"
+                                state="{timesheet>/statusState}"
+                                inverted="true" />
+
+                        </HBox>
+
+
+                        <!-- =================================================
+                             PROJECT + WEEK SUMMARY
+                             ================================================= -->
+                        <HBox
+                            id="timesheetSummaryHBox"
+                            width="100%"
+                            wrap="Wrap"
+                            alignItems="Center"
+                            class="sapUiSmallMarginBottom">
+
+                            <ObjectStatus
+                                id="selectedProjectStatus"
+                                title="Project"
+                                text="{timesheet>/projectDisplay}"
+                                icon="sap-icon://project-definition" />
+
+                            <ObjectStatus
+                                id="weeklyHoursStatus"
+                                class="sapUiMediumMarginBegin"
+                                title="Weekly Hours"
+                                text="{timesheet>/weeklyTotal}" />
+
+                            <ObjectStatus
+                                id="billableHoursStatus"
+                                class="sapUiMediumMarginBegin"
+                                title="Billable Hours"
+                                text="{timesheet>/billableTotal}"
+                                state="Success" />
+
+                        </HBox>
+
+
+                        <!-- =================================================
+                             STATUS INFORMATION
+                             ================================================= -->
+                        <MessageStrip
+                            id="submittedMessage"
+                            text="This timesheet has been submitted and is waiting for manager approval."
+                            type="Warning"
+                            showIcon="true"
+                            visible="{timesheet>/isSubmitted}"
+                            class="sapUiSmallMarginBottom" />
+
+                        <MessageStrip
+                            id="approvedMessage"
+                            text="This timesheet has been approved by the manager."
+                            type="Success"
+                            showIcon="true"
+                            visible="{timesheet>/isApproved}"
+                            class="sapUiSmallMarginBottom" />
+
+                        <MessageStrip
+                            id="rejectedMessage"
+                            text="{= 'Timesheet rejected. Reason: ' + ${timesheet>/rejectionReason} }"
+                            type="Error"
+                            showIcon="true"
+                            visible="{timesheet>/isRejected}"
+                            class="sapUiSmallMarginBottom" />
+
+
+                        <!-- =================================================
+                             TIMESHEET TABLE
+                             ================================================= -->
+                        <Table
+                            id="timesheetTable"
+                            width="100%"
+                            items="{timesheet>/rows}"
+                            growing="false"
+                            noDataText="Create a timesheet or add a task to start entering hours.">
+
+                            <headerToolbar>
+
+                                <OverflowToolbar
+                                    id="timesheetTableToolbar">
+
+                                    <Title
+                                        id="timeEntriesTitle"
+                                        text="Time Entries"
+                                        level="H3" />
+
+                                    <ToolbarSpacer
+                                        id="tableToolbarSpacer" />
+
+                                    <Button
+                                        id="addTaskButton"
+                                        text="Add Task"
+                                        icon="sap-icon://add"
+                                        type="Transparent"
+                                        visible="{timesheet>/hasTimesheet}"
+                                        enabled="{timesheet>/editable}"
+                                        press=".onAddTask" />
+
+                                </OverflowToolbar>
+
+                            </headerToolbar>
+
+
+                            <!-- =================================================
+                                 COLUMNS
+                                 ================================================= -->
+                            <columns>
+
+                                <Column
+                                    id="taskColumn"
+                                    width="14rem">
+
+                                    <Text
+                                        id="taskColumnText"
+                                        text="Task" />
+
+                                </Column>
+
+
+                                <Column
+                                    id="mondayColumn"
+                                    width="5rem"
+                                    hAlign="Center">
+
+                                    <Text
+                                        id="mondayColumnText"
+                                        text="Mon" />
+
+                                </Column>
+
+
+                                <Column
+                                    id="tuesdayColumn"
+                                    width="5rem"
+                                    hAlign="Center">
+
+                                    <Text
+                                        id="tuesdayColumnText"
+                                        text="Tue" />
+
+                                </Column>
+
+
+                                <Column
+                                    id="wednesdayColumn"
+                                    width="5rem"
+                                    hAlign="Center">
+
+                                    <Text
+                                        id="wednesdayColumnText"
+                                        text="Wed" />
+
+                                </Column>
+
+
+                                <Column
+                                    id="thursdayColumn"
+                                    width="5rem"
+                                    hAlign="Center">
+
+                                    <Text
+                                        id="thursdayColumnText"
+                                        text="Thu" />
+
+                                </Column>
+
+
+                                <Column
+                                    id="fridayColumn"
+                                    width="5rem"
+                                    hAlign="Center">
+
+                                    <Text
+                                        id="fridayColumnText"
+                                        text="Fri" />
+
+                                </Column>
+
+
+                                <Column
+                                    id="saturdayColumn"
+                                    width="5rem"
+                                    hAlign="Center">
+
+                                    <VBox
+                                        id="saturdayHeaderBox"
+                                        alignItems="Center">
+
+                                        <Text
+                                            id="saturdayColumnText"
+                                            text="Sat" />
+
+                                        <Text
+                                            id="saturdayOffText"
+                                            text="Off" />
+
+                                    </VBox>
+
+                                </Column>
+
+
+                                <Column
+                                    id="sundayColumn"
+                                    width="5rem"
+                                    hAlign="Center">
+
+                                    <VBox
+                                        id="sundayHeaderBox"
+                                        alignItems="Center">
+
+                                        <Text
+                                            id="sundayColumnText"
+                                            text="Sun" />
+
+                                        <Text
+                                            id="sundayOffText"
+                                            text="Off" />
+
+                                    </VBox>
+
+                                </Column>
+
+
+                                <Column
+                                    id="totalColumn"
+                                    width="6rem"
+                                    hAlign="Center">
+
+                                    <Text
+                                        id="totalColumnText"
+                                        text="Total" />
+
+                                </Column>
+
+
+                                <Column
+                                    id="billableColumn"
+                                    width="7rem"
+                                    hAlign="Center">
+
+                                    <Text
+                                        id="billableColumnText"
+                                        text="Billable" />
+
+                                </Column>
+
+
+                                <Column
+                                    id="deleteColumn"
+                                    width="4rem"
+                                    hAlign="Center">
+
+                                    <Text
+                                        id="deleteColumnText"
+                                        text="" />
+
+                                </Column>
+
+                            </columns>
+
+
+                            <!-- =================================================
+                                 ROW TEMPLATE
+                                 ================================================= -->
+                            <items>
+
+                                <ColumnListItem
+                                    id="timesheetRow"
+                                    vAlign="Middle">
+
+                                    <cells>
+
+                                        <!-- TASK -->
+                                        <ComboBox
+                                            id="taskComboBox"
+                                            width="100%"
+                                            selectedKey="{timesheet>taskID}"
+                                            enabled="{timesheet>/editable}"
+                                            items="{taskModel>/tasks}"
+                                            change=".onTaskChange">
+
+                                            <core:Item
+                                                id="taskComboBoxItem"
+                                                key="{taskModel>ID}"
+                                                text="{taskModel>taskName}" />
+
+                                        </ComboBox>
+
+
+                                        <!-- MONDAY -->
+                                        <Input
+                                            id="mondayInput"
+                                            type="Number"
+                                            value="{timesheet>mon}"
+                                            enabled="{timesheet>/editable}"
+                                            textAlign="Center"
+                                            change=".onHoursChange" />
+
+
+                                        <!-- TUESDAY -->
+                                        <Input
+                                            id="tuesdayInput"
+                                            type="Number"
+                                            value="{timesheet>tue}"
+                                            enabled="{timesheet>/editable}"
+                                            textAlign="Center"
+                                            change=".onHoursChange" />
+
+
+                                        <!-- WEDNESDAY -->
+                                        <Input
+                                            id="wednesdayInput"
+                                            type="Number"
+                                            value="{timesheet>wed}"
+                                            enabled="{timesheet>/editable}"
+                                            textAlign="Center"
+                                            change=".onHoursChange" />
+
+
+                                        <!-- THURSDAY -->
+                                        <Input
+                                            id="thursdayInput"
+                                            type="Number"
+                                            value="{timesheet>thu}"
+                                            enabled="{timesheet>/editable}"
+                                            textAlign="Center"
+                                            change=".onHoursChange" />
+
+
+                                        <!-- FRIDAY -->
+                                        <Input
+                                            id="fridayInput"
+                                            type="Number"
+                                            value="{timesheet>fri}"
+                                            enabled="{timesheet>/editable}"
+                                            textAlign="Center"
+                                            change=".onHoursChange" />
+
+
+                                        <!-- SATURDAY - ALWAYS LOCKED -->
+                                        <Input
+                                            id="saturdayInput"
+                                            type="Number"
+                                            value="0"
+                                            enabled="false"
+                                            textAlign="Center"
+                                            tooltip="Weekend - No working hours" />
+
+
+                                        <!-- SUNDAY - ALWAYS LOCKED -->
+                                        <Input
+                                            id="sundayInput"
+                                            type="Number"
+                                            value="0"
+                                            enabled="false"
+                                            textAlign="Center"
+                                            tooltip="Weekend - No working hours" />
+
+
+                                        <!-- ROW TOTAL -->
+                                        <ObjectNumber
+                                            id="rowTotalObjectNumber"
+                                            number="{timesheet>total}"
+                                            unit="h"
+                                            emphasized="true" />
+
+
+                                        <!-- BILLABLE -->
+                                        <Switch
+                                            id="billableSwitch"
+                                            state="{timesheet>isBillable}"
+                                            enabled="{timesheet>/editable}"
+                                            customTextOn="Yes"
+                                            customTextOff="No"
+                                            change=".onBillableChange" />
+
+
+                                        <!-- DELETE ROW -->
+                                        <Button
+                                            id="deleteTaskButton"
+                                            icon="sap-icon://delete"
+                                            type="Transparent"
+                                            tooltip="Remove Task"
+                                            visible="{timesheet>/canDelete}"
+                                            enabled="{timesheet>/editable}"
+                                            press=".onDeleteRow" />
+
+                                    </cells>
+
+                                </ColumnListItem>
+
+                            </items>
+
+                        </Table>
+
+
+                        <!-- =================================================
+                             TOTALS
+                             ================================================= -->
+                        <HBox
+                            id="totalsHBox"
+                            width="100%"
+                            justifyContent="End"
+                            wrap="Wrap"
+                            class="sapUiMediumMarginTop">
+
+                            <VBox
+                                id="totalHoursVBox"
+                                width="12rem"
+                                class="sapUiSmallMargin">
+
+                                <Label
+                                    id="totalHoursLabel"
+                                    text="Total Hours" />
+
+                                <ObjectNumber
+                                    id="weeklyTotalObjectNumber"
+                                    number="{timesheet>/weeklyTotal}"
+                                    unit="h"
+                                    emphasized="true" />
+
+                            </VBox>
+
+
+                            <VBox
+                                id="billableHoursVBox"
+                                width="12rem"
+                                class="sapUiSmallMargin">
+
+                                <Label
+                                    id="billableHoursLabel"
+                                    text="Billable Hours" />
+
+                                <ObjectNumber
+                                    id="billableTotalObjectNumber"
+                                    number="{timesheet>/billableTotal}"
+                                    unit="h"
+                                    state="Success"
+                                    emphasized="true" />
+
+                            </VBox>
+
+                        </HBox>
+
+                    </VBox>
+
+                </Panel>
+
+            </VBox>
+
+        </content>
+
+
+        <!-- =========================================================
+             FOOTER
+             ========================================================= -->
+        <footer>
+
+            <OverflowToolbar
+                id="timesheetFooterToolbar">
+
+                <!-- DELETE ENTIRE TIMESHEET -->
+                <Button
+                    id="deleteTimesheetButton"
+                    text="Delete Timesheet"
+                    icon="sap-icon://delete"
+                    type="Transparent"
+                    visible="{timesheet>/canDelete}"
+                    press=".onDeleteTimesheet" />
+
+                <ToolbarSpacer
+                    id="footerToolbarSpacer" />
+
+
+                <!-- SAVE / EDIT DRAFT -->
+                <Button
+                    id="saveDraftButton"
+                    text="Save Draft"
+                    icon="sap-icon://save"
+                    visible="{timesheet>/hasTimesheet}"
+                    enabled="{timesheet>/editable}"
+                    press=".onSaveDraft" />
+
+
+                <!-- SUBMIT -->
+                <Button
+                    id="submitTimesheetButton"
+                    text="Submit Timesheet"
+                    icon="sap-icon://paper-plane"
+                    type="Emphasized"
+                    visible="{timesheet>/hasTimesheet}"
+                    enabled="{timesheet>/canSubmit}"
+                    press=".onSubmit" />
+
+            </OverflowToolbar>
+
+        </footer>
+
+
+        <!-- =========================================================
+             DIALOGS
+             ========================================================= -->
+        <dependents>
+
+            <!-- =====================================================
+                 CREATE TIMESHEET DIALOG
+                 ===================================================== -->
+            <Dialog
+                id="createTimesheetDialog"
+                title="Create Timesheet"
+                contentWidth="32rem"
+                stretchOnPhone="true">
+
+                <content>
+
+                    <VBox
+                        id="createTimesheetContent"
+                        width="100%"
+                        class="sapUiMediumMargin">
+
+                        <!-- PROJECT CODE -->
+                        <Label
+                            id="projectCodeLabel"
+                            text="Project Code"
+                            required="true" />
+
+                        <Select
+                            id="projectSelect"
+                            width="100%"
+                            selectedKey="{createTimesheet>/projectID}"
+                            items="{projectModel>/projects}">
+
+                            <core:Item
+                                id="projectItemTemplate"
+                                key="{projectModel>ID}"
+                                text="{= ${projectModel>projectCode} + ' - ' + ${projectModel>projectName} }" />
+
+                        </Select>
+
+
+                        <!-- WEEK -->
+                        <Label
+                            id="createWeekLabel"
+                            text="Week Starting"
+                            required="true"
+                            class="sapUiMediumMarginTop" />
+
+                        <DatePicker
+                            id="weekStartPicker"
+                            width="100%"
+                            value="{createTimesheet>/weekStartDate}"
+                            valueFormat="yyyy-MM-dd"
+                            displayFormat="dd MMM yyyy" />
+
+
+                        <MessageStrip
+                            id="standardWorkWeekInfo"
+                            text="Standard work week is Monday to Friday with 8 hours per day. Saturday and Sunday are non-working days."
+                            type="Information"
+                            showIcon="true"
+                            showCloseButton="false"
+                            class="sapUiMediumMarginTop" />
+
+                    </VBox>
+
+                </content>
+
+
+                <beginButton>
+
+                    <Button
+                        id="confirmCreateTimesheetButton"
+                        text="Create Timesheet"
+                        type="Emphasized"
+                        press=".onConfirmCreateTimesheet" />
+
+                </beginButton>
+
+
+                <endButton>
+
+                    <Button
+                        id="cancelCreateTimesheetButton"
+                        text="Cancel"
+                        press=".onCancelCreateTimesheet" />
+
+                </endButton>
+
+            </Dialog>
+
+
+            <!-- =====================================================
+                 MY TIMESHEETS / HISTORY
+                 ===================================================== -->
+            <Dialog
+                id="myTimesheetsDialog"
+                title="My Timesheets"
+                contentWidth="70rem"
+                contentHeight="34rem"
+                stretchOnPhone="true">
+
+                <content>
+
+                    <VBox
+                        id="myTimesheetsContent"
+                        class="sapUiSmallMargin">
+
+                        <MessageStrip
+                            id="myTimesheetsInfo"
+                            text="Track Draft, Submitted, Approved and Rejected timesheets here."
+                            type="Information"
+                            showIcon="true"
+                            showCloseButton="false"
+                            class="sapUiSmallMarginBottom" />
+
+
+                        <Table
+                            id="myTimesheetsTable"
+                            width="100%"
+                            items="{history>/items}"
+                            noDataText="No timesheets found.">
+
+                            <columns>
+
+                                <Column
+                                    id="historyWeekColumn"
+                                    width="14rem">
+
+                                    <Text
+                                        id="historyWeekHeader"
+                                        text="Week" />
+
+                                </Column>
+
+
+                                <Column
+                                    id="historyProjectColumn"
+                                    width="12rem">
+
+                                    <Text
+                                        id="historyProjectHeader"
+                                        text="Project" />
+
+                                </Column>
+
+
+                                <Column
+                                    id="historyHoursColumn"
+                                    width="8rem"
+                                    hAlign="Center">
+
+                                    <Text
+                                        id="historyHoursHeader"
+                                        text="Billable Hours" />
+
+                                </Column>
+
+
+                                <Column
+                                    id="historySubmittedColumn"
+                                    width="10rem">
+
+                                    <Text
+                                        id="historySubmittedHeader"
+                                        text="Submitted Date" />
+
+                                </Column>
+
+
+                                <Column
+                                    id="historyStatusColumn"
+                                    width="10rem">
+
+                                    <Text
+                                        id="historyStatusHeader"
+                                        text="Status" />
+
+                                </Column>
+
+
+                                <Column
+                                    id="historyActionColumn"
+                                    width="8rem"
+                                    hAlign="Center">
+
+                                    <Text
+                                        id="historyActionHeader"
+                                        text="Open" />
+
+                                </Column>
+
+                            </columns>
+
+
+                            <items>
+
+                                <ColumnListItem
+                                    id="historyRow"
+                                    type="Inactive">
+
+                                    <cells>
+
+                                        <Text
+                                            id="historyWeekText"
+                                            text="{history>weekLabel}" />
+
+                                        <ObjectIdentifier
+                                            id="historyProjectIdentifier"
+                                            title="{history>projectCode}"
+                                            text="{history>projectName}" />
+
+                                        <ObjectNumber
+                                            id="historyBillableHours"
+                                            number="{history>totalBillableHours}"
+                                            unit="h" />
+
+                                        <Text
+                                            id="historySubmittedDate"
+                                            text="{history>submittedDate}" />
+
+                                        <ObjectStatus
+                                            id="historyStatus"
+                                            text="{history>status}"
+                                            state="{history>statusState}"
+                                            inverted="true" />
+
+                                        <Button
+                                            id="openTimesheetButton"
+                                            icon="sap-icon://display"
+                                            type="Transparent"
+                                            tooltip="Open Timesheet"
+                                            press=".onOpenTimesheet" />
+
+                                    </cells>
+
+                                </ColumnListItem>
+
+                            </items>
+
+                        </Table>
+
+                    </VBox>
+
+                </content>
+
+
+                <endButton>
+
+                    <Button
+                        id="closeMyTimesheetsButton"
+                        text="Close"
+                        press=".onCloseMyTimesheets" />
+
+                </endButton>
+
+            </Dialog>
+
+
+            <!-- =====================================================
+                 DELETE CONFIRMATION IS HANDLED BY MESSAGEBOX
+                 ===================================================== -->
+
+        </dependents>
+
+    </Page>
+
+</mvc:View>

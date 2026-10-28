@@ -1,0 +1,317 @@
+<mvc:View
+    controllerName="psa.portal.controller.Admin"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m">
+
+    <Page
+        id="adminPage"
+        title="PSA Admin Portal"
+        showNavButton="true"
+        navButtonPress=".onBack">
+
+        <content>
+
+            <VBox
+                id="adminMainContainer"
+                width="100%"
+                class="sapUiLargeMargin">
+
+                <!-- =============================================
+                     HEADER
+                     ============================================= -->
+
+                <VBox
+                    id="adminHeader"
+                    class="sapUiMediumMarginBottom">
+
+                    <Title
+                        id="adminTitle"
+                        text="Administration"
+                        level="H1" />
+
+                    <Text
+                        id="adminSubtitle"
+                        text="Manage PSA applications, operational data and administration."
+                        class="sapUiTinyMarginTop" />
+
+                </VBox>
+
+
+                <!-- =============================================
+                     CORE MANAGEMENT
+                     ============================================= -->
+
+                <Panel
+                    id="coreManagementPanel"
+                    headerText="Application Management"
+                    width="100%">
+
+                    <FlexBox
+                        id="adminApplicationCards"
+                        width="100%"
+                        wrap="Wrap"
+                        justifyContent="Start"
+                        alignItems="Stretch">
+
+
+                        <!-- EMPLOYEE MANAGEMENT -->
+
+                        <GenericTile
+                            id="employeeManagementTile"
+                            header="Employee Management"
+                            subheader="Employees &amp; Workforce"
+                            class="sapUiSmallMargin"
+                            press=".onEmployeeManagement">
+
+                            <tileContent>
+
+                                <TileContent
+                                    id="employeeManagementContent">
+
+                                    <content>
+
+                                        <NumericContent
+                                            id="employeeManagementIcon"
+                                            icon="sap-icon://employee"
+                                            valueColor="Good"
+                                            withMargin="true" />
+
+                                    </content>
+
+                                </TileContent>
+
+                            </tileContent>
+
+                        </GenericTile>
+
+
+                        <!-- PROJECT MANAGEMENT -->
+
+                        <GenericTile
+                            id="projectManagementTile"
+                            header="Project Management"
+                            subheader="Projects &amp; Delivery"
+                            class="sapUiSmallMargin"
+                            press=".onProjectManagement">
+
+                            <tileContent>
+
+                                <TileContent
+                                    id="projectManagementContent">
+
+                                    <content>
+
+                                        <NumericContent
+                                            id="projectManagementIcon"
+                                            icon="sap-icon://project-definition"
+                                            valueColor="Good"
+                                            withMargin="true" />
+
+                                    </content>
+
+                                </TileContent>
+
+                            </tileContent>
+
+                        </GenericTile>
+
+
+                        <!-- TIMESHEET MANAGEMENT -->
+
+                        <GenericTile
+                            id="timesheetManagementTile"
+                            header="Timesheet Management"
+                            subheader="Administration &amp; Tracking"
+                            class="sapUiSmallMargin"
+                            press=".onTimesheetManagement">
+
+                            <tileContent>
+
+                                <TileContent
+                                    id="timesheetManagementContent">
+
+                                    <content>
+
+                                        <NumericContent
+                                            id="timesheetManagementIcon"
+                                            icon="sap-icon://time-entry-request"
+                                            valueColor="Critical"
+                                            withMargin="true" />
+
+                                    </content>
+
+                                </TileContent>
+
+                            </tileContent>
+
+                        </GenericTile>
+
+
+                        <!-- INVOICE MANAGEMENT -->
+
+                        <GenericTile
+                            id="invoiceManagementTile"
+                            header="Invoice Management"
+                            subheader="Invoices &amp; Billing"
+                            class="sapUiSmallMargin"
+                            press=".onInvoiceManagement">
+
+                            <tileContent>
+
+                                <TileContent
+                                    id="invoiceManagementContent">
+
+                                    <content>
+
+                                        <NumericContent
+                                            id="invoiceManagementIcon"
+                                            icon="sap-icon://sales-order"
+                                            valueColor="Good"
+                                            withMargin="true" />
+
+                                    </content>
+
+                                </TileContent>
+
+                            </tileContent>
+
+                        </GenericTile>
+
+                    </FlexBox>
+
+                </Panel>
+
+
+                <!-- =============================================
+                     OPERATIONAL WORKSPACES
+                     ============================================= -->
+
+                <Panel
+                    id="operationalWorkspacePanel"
+                    headerText="Operational Workspaces"
+                    width="100%"
+                    class="sapUiMediumMarginTop">
+
+                    <FlexBox
+                        id="operationalWorkspaceCards"
+                        width="100%"
+                        wrap="Wrap"
+                        justifyContent="Start">
+
+
+                        <!-- MANAGER -->
+
+                        <GenericTile
+                            id="managerDashboardTile"
+                            header="Manager Portal"
+                            subheader="KPIs, Projects &amp; Approvals"
+                            class="sapUiSmallMargin"
+                            press=".onManagerPortal">
+
+                            <tileContent>
+
+                                <TileContent
+                                    id="managerDashboardContent">
+
+                                    <content>
+
+                                        <NumericContent
+                                            id="managerDashboardIcon"
+                                            icon="sap-icon://manager"
+                                            valueColor="Critical"
+                                            withMargin="true" />
+
+                                    </content>
+
+                                </TileContent>
+
+                            </tileContent>
+
+                        </GenericTile>
+
+
+                        <!-- EMPLOYEE TIMESHEET -->
+
+                        <GenericTile
+                            id="employeeTimesheetTile"
+                            header="Employee Timesheet"
+                            subheader="Timesheet Workspace"
+                            class="sapUiSmallMargin"
+                            press=".onEmployeeTimesheet">
+
+                            <tileContent>
+
+                                <TileContent
+                                    id="employeeTimesheetContent">
+
+                                    <content>
+
+                                        <NumericContent
+                                            id="employeeTimesheetIcon"
+                                            icon="sap-icon://time-entry-request"
+                                            valueColor="Good"
+                                            withMargin="true" />
+
+                                    </content>
+
+                                </TileContent>
+
+                            </tileContent>
+
+                        </GenericTile>
+
+
+                        <!-- MASTER DATA -->
+
+                        <GenericTile
+                            id="masterDataTile"
+                            header="Master Data"
+                            subheader="Departments &amp; Configuration"
+                            class="sapUiSmallMargin"
+                            press=".onMasterData">
+
+                            <tileContent>
+
+                                <TileContent
+                                    id="masterDataContent">
+
+                                    <content>
+
+                                        <NumericContent
+                                            id="masterDataIcon"
+                                            icon="sap-icon://database"
+                                            valueColor="Neutral"
+                                            withMargin="true" />
+
+                                    </content>
+
+                                </TileContent>
+
+                            </tileContent>
+
+                        </GenericTile>
+
+                    </FlexBox>
+
+                </Panel>
+
+
+                <!-- =============================================
+                     ACCESS NOTE
+                     ============================================= -->
+
+                <MessageStrip
+                    id="adminAccessInformation"
+                    text="Administrative access provides management capabilities. Employee submission, Manager approval and Finance payment workflows should still follow their assigned business roles."
+                    type="Information"
+                    showIcon="true"
+                    showCloseButton="false"
+                    class="sapUiMediumMarginTop" />
+
+            </VBox>
+
+        </content>
+
+    </Page>
+
+</mvc:View>

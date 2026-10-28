@@ -1,0 +1,728 @@
+<mvc:View
+    controllerName="psa.manager.portal.managerportal.controller.View1"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m">
+
+    <Page
+        id="managerPortalPage"
+        title="PSA Manager Portal"
+        class="managerPortalPage">
+
+        <content>
+
+            <!-- =====================================================
+                 MAIN PAGE LAYOUT
+                 ===================================================== -->
+            <HBox
+                id="mainLayout"
+                width="100%"
+                alignItems="Start"
+                class="sapUiMediumMargin">
+
+                <!-- =================================================
+                     LEFT: APPLICATIONS
+                     ================================================= -->
+                <VBox
+                    id="applicationArea"
+                    width="18rem"
+                    class="sapUiSmallMarginEnd">
+
+                    <Panel
+                        id="navigationPanel"
+                        headerText="Applications"
+                        width="100%">
+
+                        <List
+                            id="navigationList"
+                            mode="None"
+                            showSeparators="Inner">
+
+                            <StandardListItem
+                                id="navProjects"
+                                title="Projects"
+                                description="Manage Projects"
+                                icon="sap-icon://folder-full"
+                                type="Navigation"
+                                press=".onProjects" />
+
+                            <StandardListItem
+                                id="navEmployees"
+                                title="Employees"
+                                description="Workforce Management"
+                                icon="sap-icon://employee"
+                                type="Navigation"
+                                press=".onEmployees" />
+
+                            <StandardListItem
+                                id="navInvoices"
+                                title="Invoices"
+                                description="Finance Management"
+                                icon="sap-icon://sales-order"
+                                type="Navigation"
+                                press=".onInvoices" />
+
+                            <StandardListItem
+                                id="navTimesheets"
+                                title="Timesheets"
+                                description="Approvals &amp; Tracking"
+                                icon="sap-icon://time-entry-request"
+                                type="Navigation"
+                                press=".onTimesheets" />
+
+                            <StandardListItem
+                                id="navAnalytics"
+                                title="Manager Analytics"
+                                description="Executive Dashboard"
+                                icon="sap-icon://business-objects-experience"
+                                type="Navigation"
+                                press=".onAnalytics" />
+
+                        </List>
+
+                    </Panel>
+
+                </VBox>
+
+
+                <!-- =================================================
+                     RIGHT: DASHBOARD
+                     ================================================= -->
+                <VBox
+                    id="dashboardArea"
+                    width="100%">
+
+                    <!-- =============================================
+                         EXECUTIVE OVERVIEW
+                         ============================================= -->
+                    <Panel
+                        id="overviewPanel"
+                        headerText="Executive Overview"
+                        width="100%">
+
+                        <HBox
+                            id="overviewContainer"
+                            width="100%"
+                            wrap="Wrap"
+                            alignItems="Stretch">
+
+                            <GenericTile
+                                id="projectsTile"
+                                header="Projects"
+                                subheader="Project Management"
+                                class="sapUiTinyMargin"
+                                press=".onProjects">
+
+                                <tileContent>
+                                    <TileContent id="projectsContent">
+                                        <content>
+                                            <NumericContent
+                                                id="projectCount"
+                                                value="{dashboard>/projects}"
+                                                valueColor="Good"
+                                                icon="sap-icon://folder-full" />
+                                        </content>
+                                    </TileContent>
+                                </tileContent>
+
+                            </GenericTile>
+
+
+                            <GenericTile
+                                id="employeesTile"
+                                header="Employees"
+                                subheader="Workforce"
+                                class="sapUiTinyMargin"
+                                press=".onEmployees">
+
+                                <tileContent>
+                                    <TileContent id="employeesContent">
+                                        <content>
+                                            <NumericContent
+                                                id="employeeCount"
+                                                value="{dashboard>/employees}"
+                                                valueColor="Good"
+                                                icon="sap-icon://employee" />
+                                        </content>
+                                    </TileContent>
+                                </tileContent>
+
+                            </GenericTile>
+
+
+                            <GenericTile
+                                id="invoiceTile"
+                                header="Invoices"
+                                subheader="Finance Management"
+                                class="sapUiTinyMargin"
+                                press=".onInvoices">
+
+                                <tileContent>
+                                    <TileContent id="invoiceContent">
+                                        <content>
+                                            <NumericContent
+                                                id="invoiceCount"
+                                                value="{dashboard>/invoices}"
+                                                valueColor="Critical"
+                                                icon="sap-icon://sales-order" />
+                                        </content>
+                                    </TileContent>
+                                </tileContent>
+
+                            </GenericTile>
+
+
+                            <GenericTile
+                                id="timesheetTile"
+                                header="Timesheets"
+                                subheader="Approvals &amp; Tracking"
+                                class="sapUiTinyMargin"
+                                press=".onTimesheets">
+
+                                <tileContent>
+                                    <TileContent id="timesheetContent">
+                                        <content>
+                                            <NumericContent
+                                                id="timesheetCount"
+                                                value="{dashboard>/timesheets}"
+                                                valueColor="Neutral"
+                                                icon="sap-icon://time-entry-request" />
+                                        </content>
+                                    </TileContent>
+                                </tileContent>
+
+                            </GenericTile>
+
+                        </HBox>
+
+                    </Panel>
+
+
+                    <!-- =============================================
+                         OPERATIONAL INSIGHTS
+                         ============================================= -->
+                    <Title
+                        id="operationalInsightsTitle"
+                        text="Operational Insights"
+                        level="H3"
+                        class="sapUiMediumMarginTop sapUiSmallMarginBegin sapUiSmallMarginBottom" />
+
+
+                    <!-- IMPORTANT:
+                         Start instead of SpaceBetween prevents
+                         Project Health from moving to far right.
+                    -->
+                    <HBox
+                        id="insightContainer"
+                        width="100%"
+                        alignItems="Start"
+                        justifyContent="Start"
+                        wrap="Wrap">
+
+                        <!-- =========================================
+                             PENDING ACTIONS
+                             ========================================= -->
+                        <Panel
+                            id="pendingActionsPanel"
+                            headerText="Pending Actions"
+                            width="32rem"
+                            class="sapUiSmallMarginEnd sapUiSmallMarginBottom">
+
+                            <VBox
+                                id="pendingActionsContainer"
+                                width="100%">
+
+                                <!-- TIMESHEETS -->
+                                <HBox
+                                    id="pendingTimesheetRow"
+                                    width="100%"
+                                    alignItems="Center"
+                                    justifyContent="SpaceBetween"
+                                    class="sapUiSmallMargin">
+
+                                    <HBox
+                                        id="pendingTimesheetInfo"
+                                        alignItems="Center">
+
+                                        <Avatar
+                                            id="pendingTimesheetIcon"
+                                            displayShape="Square"
+                                            displaySize="S"
+                                            src="sap-icon://time-entry-request"
+                                            backgroundColor="Accent6"
+                                            class="sapUiSmallMarginEnd" />
+
+                                        <VBox
+                                            id="pendingTimesheetText"
+                                            width="17rem">
+
+                                            <Title
+                                                id="pendingTimesheetTitle"
+                                                text="Timesheets Awaiting Approval"
+                                                level="H5"
+                                                wrapping="true" />
+
+                                            <Text
+                                                id="pendingTimesheetSubtext"
+                                                text="Manager action required"
+                                                wrapping="true" />
+
+                                        </VBox>
+
+                                    </HBox>
+
+                                    <HBox
+                                        id="pendingTimesheetAction"
+                                        alignItems="Center">
+
+                                        <ObjectNumber
+                                            id="pendingTimesheetCount"
+                                            number="{dashboard>/pendingApprovals}"
+                                            state="Warning"
+                                            class="sapUiSmallMarginEnd" />
+
+                                        <Button
+                                            id="pendingTimesheetButton"
+                                            icon="sap-icon://navigation-right-arrow"
+                                            type="Transparent"
+                                            tooltip="View pending timesheets"
+                                            press=".onPendingTimesheets" />
+
+                                    </HBox>
+
+                                </HBox>
+
+
+                                <!-- INVOICES -->
+                                <HBox
+                                    id="pendingInvoiceRow"
+                                    width="100%"
+                                    alignItems="Center"
+                                    justifyContent="SpaceBetween"
+                                    class="sapUiSmallMargin">
+
+                                    <HBox
+                                        id="pendingInvoiceInfo"
+                                        alignItems="Center">
+
+                                        <Avatar
+                                            id="pendingInvoiceIcon"
+                                            displayShape="Square"
+                                            displaySize="S"
+                                            src="sap-icon://sales-order"
+                                            backgroundColor="Accent2"
+                                            class="sapUiSmallMarginEnd" />
+
+                                        <VBox
+                                            id="pendingInvoiceText"
+                                            width="17rem">
+
+                                            <Title
+                                                id="pendingInvoiceTitle"
+                                                text="Invoices Awaiting Payment"
+                                                level="H5"
+                                                wrapping="true" />
+
+                                            <Text
+                                                id="pendingInvoiceSubtext"
+                                                text="Payment follow-up required"
+                                                wrapping="true" />
+
+                                        </VBox>
+
+                                    </HBox>
+
+                                    <HBox
+                                        id="pendingInvoiceAction"
+                                        alignItems="Center">
+
+                                        <ObjectNumber
+                                            id="pendingInvoiceCount"
+                                            number="{dashboard>/pendingInvoices}"
+                                            state="Error"
+                                            class="sapUiSmallMarginEnd" />
+
+                                        <Button
+                                            id="pendingInvoiceButton"
+                                            icon="sap-icon://navigation-right-arrow"
+                                            type="Transparent"
+                                            tooltip="View pending invoices"
+                                            press=".onPendingInvoices" />
+
+                                    </HBox>
+
+                                </HBox>
+
+
+                                <!-- BUDGET -->
+                                <HBox
+                                    id="pendingBudgetRow"
+                                    width="100%"
+                                    alignItems="Center"
+                                    justifyContent="SpaceBetween"
+                                    class="sapUiSmallMargin">
+
+                                    <HBox
+                                        id="pendingBudgetInfo"
+                                        alignItems="Center">
+
+                                        <Avatar
+                                            id="pendingBudgetIcon"
+                                            displayShape="Square"
+                                            displaySize="S"
+                                            src="sap-icon://money-bills"
+                                            backgroundColor="Accent10"
+                                            class="sapUiSmallMarginEnd" />
+
+                                        <VBox
+                                            id="pendingBudgetText"
+                                            width="17rem">
+
+                                            <Title
+                                                id="pendingBudgetTitle"
+                                                text="Projects Over Budget"
+                                                level="H5"
+                                                wrapping="true" />
+
+                                            <Text
+                                                id="pendingBudgetSubtext"
+                                                text="Budget review required"
+                                                wrapping="true" />
+
+                                        </VBox>
+
+                                    </HBox>
+
+                                    <HBox
+                                        id="pendingBudgetAction"
+                                        alignItems="Center">
+
+                                        <ObjectNumber
+                                            id="pendingBudgetCount"
+                                            number="{dashboard>/budgetRisks}"
+                                            state="Error"
+                                            class="sapUiSmallMarginEnd" />
+
+                                        <Button
+                                            id="pendingBudgetButton"
+                                            icon="sap-icon://navigation-right-arrow"
+                                            type="Transparent"
+                                            tooltip="View projects over budget"
+                                            press=".onOverBudgetProjects" />
+
+                                    </HBox>
+
+                                </HBox>
+
+                            </VBox>
+
+                        </Panel>
+
+
+                        <!-- =========================================
+                             PROJECT HEALTH
+                             ========================================= -->
+                        <Panel
+                            id="projectHealthPanel"
+                            headerText="Project Health"
+                            width="32rem"
+                            class="sapUiSmallMarginBegin sapUiSmallMarginBottom">
+
+                            <VBox
+                                id="projectHealthContainer"
+                                width="100%">
+
+                                <!-- ACTIVE PROJECTS -->
+                                <HBox
+                                    id="activeProjectRow"
+                                    width="100%"
+                                    alignItems="Center"
+                                    justifyContent="SpaceBetween"
+                                    class="sapUiSmallMargin">
+
+                                    <HBox
+                                        id="activeProjectInfo"
+                                        alignItems="Center">
+
+                                        <Avatar
+                                            id="activeProjectIcon"
+                                            displayShape="Square"
+                                            displaySize="S"
+                                            src="sap-icon://activate"
+                                            backgroundColor="Accent8"
+                                            class="sapUiSmallMarginEnd" />
+
+                                        <VBox
+                                            id="activeProjectText"
+                                            width="17rem">
+
+                                            <Title
+                                                id="activeProjectTitle"
+                                                text="Active Projects"
+                                                level="H5"
+                                                wrapping="true" />
+
+                                            <Text
+                                                id="activeProjectSubtext"
+                                                text="Currently running projects"
+                                                wrapping="true" />
+
+                                        </VBox>
+
+                                    </HBox>
+
+                                    <HBox
+                                        id="activeProjectAction"
+                                        alignItems="Center">
+
+                                        <ObjectNumber
+                                            id="activeProjectCount"
+                                            number="{dashboard>/activeProjects}"
+                                            state="Success"
+                                            class="sapUiSmallMarginEnd" />
+
+                                        <Button
+                                            id="activeProjectButton"
+                                            icon="sap-icon://navigation-right-arrow"
+                                            type="Transparent"
+                                            tooltip="View active projects"
+                                            press=".onActiveProjects" />
+
+                                    </HBox>
+
+                                </HBox>
+
+
+                                <!-- COMPLETED PROJECTS -->
+                                <HBox
+                                    id="completedProjectRow"
+                                    width="100%"
+                                    alignItems="Center"
+                                    justifyContent="SpaceBetween"
+                                    class="sapUiSmallMargin">
+
+                                    <HBox
+                                        id="completedProjectInfo"
+                                        alignItems="Center">
+
+                                        <Avatar
+                                            id="completedProjectIcon"
+                                            displayShape="Square"
+                                            displaySize="S"
+                                            src="sap-icon://complete"
+                                            backgroundColor="Accent8"
+                                            class="sapUiSmallMarginEnd" />
+
+                                        <VBox
+                                            id="completedProjectText"
+                                            width="17rem">
+
+                                            <Title
+                                                id="completedProjectTitle"
+                                                text="Completed Projects"
+                                                level="H5"
+                                                wrapping="true" />
+
+                                            <Text
+                                                id="completedProjectSubtext"
+                                                text="Successfully delivered"
+                                                wrapping="true" />
+
+                                        </VBox>
+
+                                    </HBox>
+
+                                    <HBox
+                                        id="completedProjectAction"
+                                        alignItems="Center">
+
+                                        <ObjectNumber
+                                            id="completedProjectCount"
+                                            number="{dashboard>/completedProjects}"
+                                            state="Success"
+                                            class="sapUiSmallMarginEnd" />
+
+                                        <Button
+                                            id="completedProjectButton"
+                                            icon="sap-icon://navigation-right-arrow"
+                                            type="Transparent"
+                                            tooltip="View completed projects"
+                                            press=".onCompletedProjects" />
+
+                                    </HBox>
+
+                                </HBox>
+
+
+                                <!-- PROJECTS ON HOLD -->
+                                <HBox
+                                    id="onHoldProjectRow"
+                                    width="100%"
+                                    alignItems="Center"
+                                    justifyContent="SpaceBetween"
+                                    class="sapUiSmallMargin">
+
+                                    <HBox
+                                        id="onHoldProjectInfo"
+                                        alignItems="Center">
+
+                                        <Avatar
+                                            id="onHoldProjectIcon"
+                                            displayShape="Square"
+                                            displaySize="S"
+                                            src="sap-icon://pause"
+                                            backgroundColor="Accent2"
+                                            class="sapUiSmallMarginEnd" />
+
+                                        <VBox
+                                            id="onHoldProjectText"
+                                            width="17rem">
+
+                                            <Title
+                                                id="onHoldProjectTitle"
+                                                text="Projects On Hold"
+                                                level="H5"
+                                                wrapping="true" />
+
+                                            <Text
+                                                id="onHoldProjectSubtext"
+                                                text="Requires management attention"
+                                                wrapping="true" />
+
+                                        </VBox>
+
+                                    </HBox>
+
+                                    <HBox
+                                        id="onHoldProjectAction"
+                                        alignItems="Center">
+
+                                        <ObjectNumber
+                                            id="onHoldProjectCount"
+                                            number="{dashboard>/onHoldProjects}"
+                                            state="Warning"
+                                            class="sapUiSmallMarginEnd" />
+
+                                        <Button
+                                            id="onHoldProjectButton"
+                                            icon="sap-icon://navigation-right-arrow"
+                                            type="Transparent"
+                                            tooltip="View projects on hold"
+                                            press=".onHoldProjects" />
+
+                                    </HBox>
+
+                                </HBox>
+
+                            </VBox>
+
+                        </Panel>
+
+                    </HBox>
+
+                </VBox>
+
+            </HBox>
+
+        </content>
+
+
+        <!-- =========================================================
+             DETAILS DIALOG
+             ========================================================= -->
+        <dependents>
+
+            <Dialog
+                id="detailsDialog"
+                title="{dialog>/title}"
+                contentWidth="1000px"
+                contentHeight="500px"
+                stretchOnPhone="true">
+
+                <content>
+
+                    <Table
+                        id="detailsTable"
+                        width="100%"
+                        items="{dialog>/items}"
+                        noDataText="No records available">
+
+                        <columns>
+
+                            <Column
+                                id="detailsCodeColumn"
+                                width="25%">
+
+                                <Text
+                                    id="detailsCodeHeader"
+                                    text="Code" />
+
+                            </Column>
+
+                            <Column
+                                id="detailsNameColumn"
+                                width="45%">
+
+                                <Text
+                                    id="detailsNameHeader"
+                                    text="Name" />
+
+                            </Column>
+
+                            <Column
+                                id="detailsStatusColumn"
+                                width="30%">
+
+                                <Text
+                                    id="detailsStatusHeader"
+                                    text="Status" />
+
+                            </Column>
+
+                        </columns>
+
+                        <items>
+
+                            <ColumnListItem
+                                id="detailsRowTemplate"
+                                type="Inactive">
+
+                                <cells>
+
+                                    <Text
+                                        id="detailsCodeText"
+                                        text="{dialog>projectCode}" />
+
+                                    <Text
+                                        id="detailsNameText"
+                                        text="{dialog>projectName}" />
+
+                                    <ObjectStatus
+                                        id="detailsStatusText"
+                                        text="{dialog>status}" />
+
+                                </cells>
+
+                            </ColumnListItem>
+
+                        </items>
+
+                    </Table>
+
+                </content>
+
+                <endButton>
+
+                    <Button
+                        id="closeDialogButton"
+                        text="Close"
+                        press=".onCloseDialog" />
+
+                </endButton>
+
+            </Dialog>
+
+        </dependents>
+
+    </Page>
+
+</mvc:View>

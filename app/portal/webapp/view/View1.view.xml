@@ -1,0 +1,247 @@
+<mvc:View
+    controllerName="psa.portal.controller.View1"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m">
+
+    <Page
+        id="portalPage"
+        title="Professional Services Automation">
+
+        <content>
+
+            <VBox
+                id="mainContainer"
+                width="100%"
+                class="sapUiLargeMargin">
+
+                <!-- =============================================
+                     HEADER
+                     ============================================= -->
+
+                <VBox
+                    id="headerContainer"
+                    width="100%"
+                    class="sapUiMediumMarginBottom">
+
+                    <Title
+                        id="portalTitle"
+                        text="PSA Portal"
+                        level="H1" />
+
+                    <Text
+                        id="portalSubtitle"
+                        text="Professional Services Automation"
+                        class="sapUiTinyMarginTop" />
+
+                    <Text
+                        id="portalDescription"
+                        text="Select a workspace to continue."
+                        class="sapUiTinyMarginTop" />
+
+                </VBox>
+
+
+                <!-- =============================================
+                     PORTAL CARDS
+                     ============================================= -->
+
+                <FlexBox
+                    id="portalCardContainer"
+                    width="100%"
+                    wrap="Wrap"
+                    justifyContent="Start"
+                    alignItems="Stretch">
+
+
+                    <!-- EMPLOYEE -->
+
+                    <GenericTile
+                        id="employeePortalTile"
+                        header="Employee Portal"
+                        subheader="Timesheets, Tasks &amp; History"
+                        visible="{roles>/employee}"
+                        class="sapUiSmallMargin"
+                        press=".onEmployeePortal">
+
+                        <tileContent>
+
+                            <TileContent
+                                id="employeeTileContent">
+
+                                <content>
+
+                                    <NumericContent
+                                        id="employeeTileIcon"
+                                        icon="sap-icon://employee"
+                                        valueColor="Good"
+                                        withMargin="true" />
+
+                                </content>
+
+                            </TileContent>
+
+                        </tileContent>
+
+                    </GenericTile>
+
+
+                    <!-- MANAGER -->
+
+                    <GenericTile
+                        id="managerPortalTile1"
+                        header="Manager Portal"
+                        subheader="Projects, KPIs &amp; Approvals"
+                        visible="{roles>/manager}"
+                        class="sapUiSmallMargin"
+                        press=".onManagerPortal">
+
+                        <tileContent>
+
+                            <TileContent
+                                id="managerTileContent">
+
+                                <content>
+
+                                    <NumericContent
+                                        id="managerTileIcon"
+                                        icon="sap-icon://manager"
+                                        valueColor="Critical"
+                                        withMargin="true" />
+
+                                </content>
+
+                            </TileContent>
+
+                        </tileContent>
+
+                    </GenericTile>
+
+
+                    <!-- FINANCE -->
+
+                    <GenericTile
+                        id="financePortalTile"
+                        header="Finance Portal"
+                        subheader="Invoices, Billing &amp; Payments"
+                        visible="{roles>/finance}"
+                        class="sapUiSmallMargin"
+                        press=".onFinancePortal">
+
+                        <tileContent>
+
+                            <TileContent
+                                id="financeTileContent">
+
+                                <content>
+
+                                    <NumericContent
+                                        id="financeTileIcon"
+                                        icon="sap-icon://money-bills"
+                                        valueColor="Good"
+                                        withMargin="true" />
+
+                                </content>
+
+                            </TileContent>
+
+                        </tileContent>
+
+                    </GenericTile>
+
+
+                    <!-- ADMIN -->
+
+                    <GenericTile
+                        id="adminPortalTile"
+                        header="Admin Portal"
+                        subheader="Full Administration"
+                        visible="{roles>/admin}"
+                        class="sapUiSmallMargin"
+                        press=".onAdminPortal">
+
+                        <tileContent>
+
+                            <TileContent
+                                id="adminTileContent">
+
+                                <content>
+
+                                    <NumericContent
+                                        id="adminTileIcon"
+                                        icon="sap-icon://settings"
+                                        valueColor="Neutral"
+                                        withMargin="true" />
+
+                                </content>
+
+                            </TileContent>
+
+                        </tileContent>
+
+                    </GenericTile>
+
+                </FlexBox>
+
+
+                <!-- =============================================
+                     WORKSPACE OVERVIEW
+                     ============================================= -->
+
+                <Panel
+                    id="workspaceOverviewPanel"
+                    headerText="Available Workspaces"
+                    class="sapUiMediumMarginTop">
+
+                    <List
+                        id="workspaceList"
+                        showSeparators="Inner">
+
+                        <StandardListItem
+                            id="employeeWorkspaceItem"
+                            title="Employee Workspace"
+                            description="Create and submit timesheets, track history and assigned work"
+                            icon="sap-icon://employee"
+                            visible="{roles>/employee}" />
+
+                        <StandardListItem
+                            id="managerWorkspaceItem"
+                            title="Manager Workspace"
+                            description="Project monitoring, approvals, project health and analytics"
+                            icon="sap-icon://manager"
+                            visible="{roles>/manager}" />
+
+                        <StandardListItem
+                            id="financeWorkspaceItem"
+                            title="Finance Workspace"
+                            description="Invoice management, billing and payment tracking"
+                            icon="sap-icon://money-bills"
+                            visible="{roles>/finance}" />
+
+                        <StandardListItem
+                            id="adminWorkspaceItem"
+                            title="Administration Workspace"
+                            description="Full administrative access to PSA management applications"
+                            icon="sap-icon://settings"
+                            visible="{roles>/admin}" />
+
+                    </List>
+
+                </Panel>
+
+
+                <MessageStrip
+                    id="noPortalAccessMessage"
+                    text="No PSA workspace is assigned to your account. Contact your administrator."
+                    type="Warning"
+                    showIcon="true"
+                    showCloseButton="false"
+                    visible="{roles>/noAccess}"
+                    class="sapUiMediumMarginTop" />
+
+            </VBox>
+
+        </content>
+
+    </Page>
+
+</mvc:View>
